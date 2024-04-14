@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_wk13/phone.dart';
+
+import 'detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -70,6 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Phone> phoneList = [];
+    phoneList.add(Phone("iphone", 599.99, "image1.png", "This is image 1 repr iphone"));
+    phoneList.add(Phone("galaxy", 499.99, "image2.png", "This is image 2 repr galaxy"));
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -86,35 +94,43 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: phoneList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailScreen(title: "Detail Page", phone: phoneList[index])
+                )
+              )
+            },
+            child: Card(
+              color: Colors.blue,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Hero(
+                    tag: phoneList[index].photo,
+                    child: Image(
+                      width: 125,
+                      height: 125,
+                      image: AssetImage(
+                        "images/${phoneList[index].photo}"
+                      ),
+                    ),
+                  ),
+                  Text(phoneList[index].brand),
+                  Text(phoneList[index].toString())
+                ],
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+    ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
